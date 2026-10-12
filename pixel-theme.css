@@ -1,124 +1,201 @@
-/* Calc Clicker — hand-built pixel UI pass. Art is intentionally placeholder-ready. */
+/* Calc Clicker — compact, hand-tuned UI. Keep the play area on one screen. */
 :root {
-  --bg: #14213f;
-  --surface: #fbf0d4;
-  --surface-2: #f4e3b8;
-  --surface-3: #e8d3a5;
-  --line: #14213f;
-  --line-soft: rgba(20,33,63,.18);
-  --ink: #14213f;
-  --muted: #53617b;
-  --blue: #0789ff;
-  --blue-deep: #075eb0;
-  --orange: #f5862a;
-  --mint: #2f8a55;
-  --danger: #c8382b;
-  --shadow: 0 5px 0 rgba(8,17,37,.55);
-  --radius: 7px;
-  font-family: "Trebuchet MS", "Arial Rounded MT Bold", system-ui, sans-serif;
+  --bg:#111b2b; --surface:#19263a; --surface-2:#202f45; --surface-3:#293a52;
+  --line:#35455c; --line-soft:rgba(225,235,248,.12); --ink:#f3f0e7;
+  --muted:#a5b0c1; --blue:#83b9ec; --blue-deep:#477eaf; --orange:#f0ad67;
+  --mint:#9fd4b7; --danger:#df8984; --shadow:none; --radius:8px;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
 }
+* { box-sizing:border-box; }
+html,body { width:100%; min-height:100%; }
 body {
-  color: #fbf0d4;
-  background: #101a33;
-  background-image: linear-gradient(180deg,#26395f 0,#1a2748 260px,#101a33 620px);
-  image-rendering: pixelated;
+  margin:0; color:var(--ink); background:#111b2b;
+  background-image:none; font-size:13px; line-height:1.42;
+  overflow-x:hidden; -webkit-font-smoothing:antialiased;
 }
-.loader { background: #000; }
-.loader-inner { width: min(390px,88vw); gap: 0; }
-.boot-logo { display:block; width:min(330px,78vw); margin:0 auto 28px; }
-.loading-track { width:100%; height:5px; margin-top:0; border-radius:0; background:#1c2941; }
-.loading-track span { border-radius:0; background:#0789ff; box-shadow:none; transition:width .18s linear; }
-.loader-note { margin-top:12px; color:#91a2bf; font:800 10px/1.3 system-ui,sans-serif; letter-spacing:.17em; }
-.game-shell { max-width:1320px; padding-inline:24px; }
-.topbar { border-bottom:2px solid rgba(251,240,212,.14); }
-.brand-copy small { color:#55b4ff; }
-.currency-glyph { border:2px solid #0789ff; border-radius:5px; color:#0789ff; background:#0d1b34; }
-.save-chip i { box-shadow:none; }
-.main-nav { gap:7px; padding-block:13px 18px; }
-.nav-item { border:2px solid transparent; border-radius:5px; font-weight:800; }
-.nav-item.active { border-color:#0789ff; color:#fbf0d4; background:#1b2d50; box-shadow:3px 3px 0 #0a1429; }
-.nav-item > span:first-child { color:#ff9a42; }
-.panel {
-  border:2px solid rgba(251,240,212,.18);
-  border-radius:7px;
-  background:#182746;
-  box-shadow:0 5px 0 rgba(5,11,25,.25);
+.game-shell {
+  width:min(1380px,100%); height:100vh; height:100svh; min-height:0;
+  padding:0 22px 10px; overflow:hidden; gap:0;
 }
-.page-heading h1,.game-intro h1 { letter-spacing:-.035em; }
-.page-heading .eyebrow,.eyebrow { color:#ffad59; }
-.game-intro h1 span,.page-heading h1 em { color:#ffad59; }
+.topbar { min-height:66px; flex:0 0 66px; border-bottom:1px solid var(--line-soft); }
+.brand { gap:9px; }
+.brand img { width:34px; height:34px; }
+.brand-copy strong { font-size:16px; letter-spacing:-.025em; }
+.brand-copy small { color:var(--blue); font-size:8px; letter-spacing:.12em; }
+.top-summary { gap:16px; }
+.currency-glyph { width:30px;height:30px;border-radius:6px;border:1px solid var(--line);color:var(--blue);background:var(--surface-2); }
+.top-total small { font-size:8px; letter-spacing:.09em; }
+.top-total strong { font-size:15px; }
+.save-chip { font-size:10px; }
+.save-chip i,.save-chip.warning i,.save-chip.error i { box-shadow:none; }
+.main-nav { flex:0 0 auto; gap:4px; padding:9px 0 12px; overflow-x:auto; }
+.nav-item { padding:7px 11px; gap:7px; border-radius:6px; font-size:12px; }
+.nav-item > span:first-child { font-size:14px; color:var(--muted); }
+.nav-item:hover { background:var(--surface); }
+.nav-item.active { color:var(--ink); background:#26364c; border-color:#40536c; box-shadow:none; }
+.screen-host { flex:1 1 auto; min-height:0; overflow:auto; overscroll-behavior:contain; scrollbar-width:thin; scrollbar-color:#45566e transparent; }
+.app-footer { flex:0 0 auto; padding-top:7px; font-size:9px; }
+.panel { border:1px solid var(--line); border-radius:8px; background:var(--surface); box-shadow:none; }
+.page-wrap { animation:none; }
+.page-heading { margin:2px 0 14px; }
+.page-heading .eyebrow,.eyebrow { margin-bottom:4px; color:var(--blue); font-size:9px; letter-spacing:.12em; }
+.page-heading h1 { font-size:clamp(24px,3vw,34px); letter-spacing:-.04em; }
+.page-heading p { margin-top:5px; font-size:12px; }
+.game-layout {
+  grid-template-columns:minmax(0,1.04fr) minmax(340px,.96fr);
+  gap:13px; align-items:stretch; min-height:0; height:100%;
+}
+.game-main { gap:9px; min-height:0; }
+.game-intro { align-items:center; gap:10px; }
+.game-intro h1 { font-size:clamp(26px,3vw,36px); }
+.game-intro p { margin-top:5px; font-size:12px; }
+.live-stats { gap:6px; }
+.live-stat { min-width:88px; padding:7px 9px; border:1px solid var(--line); border-radius:6px; background:var(--surface); }
+.live-stat small { font-size:8px; letter-spacing:.07em; }
+.live-stat strong { font-size:13px; }
 .click-stage {
-  border:3px solid #0a1429;
-  border-radius:7px;
-  background-color:#1a2a4b;
-  background-image:linear-gradient(rgba(7,18,40,.45) 1px,transparent 1px),linear-gradient(90deg,rgba(7,18,40,.45) 1px,transparent 1px);
-  background-size:16px 16px;
-  box-shadow:inset 0 0 0 2px rgba(251,240,212,.06);
+  min-height:0; flex:1 1 0; border:1px solid var(--line); border-radius:8px;
+  background:#18263a; overflow:hidden;
 }
-.click-stage:before { opacity:.25; background-image:radial-gradient(#8bb3d9 1px,transparent 1px); background-size:16px 16px; }
+.click-stage:before { opacity:.09; background-image:linear-gradient(rgba(180,205,230,.16) 1px,transparent 1px),linear-gradient(90deg,rgba(180,205,230,.16) 1px,transparent 1px); background-size:24px 24px; }
 .stage-glow { display:none; }
 .calc-button {
-  width:min(300px,78%);
-  padding:14px;
-  border:4px solid #0a1429;
-  border-radius:7px;
-  background:#f4e3b8;
-  box-shadow:0 7px 0 #070f22, inset 0 0 0 2px #fff6df;
-  transition:transform .09s steps(3,end),box-shadow .09s steps(3,end),filter .12s;
+  width:min(265px,72%); padding:13px; border:2px solid #4a5b71; border-radius:8px;
+  background:#26364b; box-shadow:0 4px 0 #0b1320; transition:transform .09s,box-shadow .09s,border-color .12s;
 }
-.calc-button:hover { border-color:#0a1429; box-shadow:0 9px 0 #070f22; filter:brightness(1.04); }
-.calc-button:active,.calc-button.pulse { transform:translateY(5px); box-shadow:0 2px 0 #070f22; }
-.calc-screen { border:3px solid #0a1429; border-radius:3px; background:#0b1a1d; box-shadow:inset 0 3px 0 #03090d; }
-.calc-screen strong { color:#9ff0b6; text-shadow:none; }
-.calc-keys { gap:5px; }
-.calc-key { border:2px solid #14213f; border-radius:3px; color:#14213f; background:#fff2d1; box-shadow:0 2px 0 #cbb98f; }
-.calc-key.operator { color:#075eb0; background:#d4eaff; }
-.calc-key.equals { color:#14213f; border-color:#14213f; background:#f5862a; }
-.button {
-  border:2px solid #0a1429;
-  border-radius:5px;
-  background:#26395f;
-  box-shadow:0 3px 0 #070f22;
-  font-weight:800;
-  transition:transform .1s steps(3,end),box-shadow .1s,filter .12s,background .12s;
-}
-.button:hover:not(:disabled) { border-color:#0a1429; background:#314a76; box-shadow:0 5px 0 #070f22; transform:translateY(-2px); }
-.button:active:not(:disabled) { transform:translateY(2px); box-shadow:0 1px 0 #070f22; }
-.button.primary { color:#14213f; border-color:#0a1429; background:#f5862a; box-shadow:0 3px 0 #070f22; }
-.button.primary:hover:not(:disabled) { background:#ffad59; }
-.button.soft { background:#1c2e50; }
-.button.warn { border-color:#7d241f; color:#ffd3ca; background:#572a35; }
-.buy-mode,.filter-chip,.ach-filter {
-  border-radius:4px;
-}
-.buy-mode.active,.filter-chip.active { color:#14213f; background:#ffad59; border-color:#0a1429; }
-.upgrade-card { border-radius:5px; border-color:rgba(251,240,212,.18); background:#1c2d4d; }
-.upgrade-card.affordable { border-color:#f5862a; background:#213555; }
-.upgrade-icon,.perk-icon,.break-icon { border-radius:5px; box-shadow:2px 2px 0 #0a1429; }
-.progress-track,.streak-track,.progress-fill { border-radius:2px; }
-.toast-region { top:14px; right:14px; }
-.toast { border:2px solid #0a1429; border-radius:5px; background:#fbf0d4; color:#14213f; box-shadow:0 4px 0 rgba(0,0,0,.35); }
-.toast small { color:#53617b; }
-.toast-icon { border-radius:4px; background:#f5862a; color:#14213f; }
+.calc-button:hover { border-color:#83b9ec; box-shadow:0 4px 0 #0b1320; filter:none; }
+.calc-button:active,.calc-button.pulse { transform:translateY(3px); box-shadow:0 1px 0 #0b1320; }
+.calc-screen { min-height:62px; border:1px solid #3f5b60; border-radius:4px; background:#101d22; box-shadow:none; }
+.calc-screen strong { color:#b8e5c7; text-shadow:none; font-size:clamp(20px,3vw,28px); }
+.calc-keys { gap:5px; margin-top:9px; }
+.calc-key { min-height:30px; border:1px solid #526075; border-radius:4px; color:#e6e8e8; background:#34445a; box-shadow:none; }
+.calc-key.operator { color:#b8d9fa; background:#2c4058; }
+.calc-key.equals { color:#17202b; border-color:#e0a263; background:#e9ad6a; }
+.click-instruction { bottom:10px; color:#a5b0c1; font-size:10px; }
+.click-instruction strong { color:#f3f0e7; }
+.stage-bottom { min-height:25px; }
+.streak-track { height:4px; }
+.streak-fill { background:var(--orange); }
+.upgrade-panel { min-height:0; }
+.upgrade-head { padding:12px 13px 8px; }
+.upgrade-head h2 { font-size:17px; }
+.buy-modes { border-radius:5px; }
+.buy-mode { border-radius:3px; }
+.buy-mode.active,.filter-chip.active { color:#17202b; background:var(--blue); border-color:var(--blue); }
+.upgrade-filters { gap:4px; padding:0 13px 8px; }
+.filter-chip { padding:5px 8px; border-radius:4px; }
+.upgrade-list { min-height:0; max-height:none; overflow-y:auto; padding:2px 9px 9px; gap:6px; }
+.upgrade-card { min-height:62px; grid-template-columns:34px minmax(0,1fr) auto; gap:8px; padding:7px; border:1px solid var(--line); border-radius:6px; background:#1b2a3e; }
+.upgrade-card.affordable { border-color:#7196b8; background:#22334a; }
+.upgrade-icon,.perk-icon,.break-icon { width:32px; height:32px; border:1px solid #45576e; border-radius:5px; box-shadow:none; background:#2a3b51; color:var(--blue); }
+.upgrade-copy h3 { font-size:11px; }
+.upgrade-copy p { font-size:9px; line-height:1.3; }
+.upgrade-meta { font-size:8px; }
+.upgrade-card .button { min-width:72px; font-size:9px; }
+.button { min-height:35px; padding:8px 11px; border:1px solid #45566e; border-radius:5px; background:#293a51; box-shadow:none; font-size:12px; transition:background .12s,border-color .12s,transform .1s; }
+.button:hover:not(:disabled) { background:#344963; border-color:#7186a0; box-shadow:none; transform:translateY(-1px); }
+.button:active:not(:disabled) { transform:translateY(1px); box-shadow:none; }
+.button.primary { color:#17202b; border-color:#e3a261; background:#e9ad6a; box-shadow:none; }
+.button.primary:hover:not(:disabled) { background:#f2bf82; }
+.button.soft { background:#202f44; }
+.button.warn { color:#ffd4ce; background:#4a2c37; border-color:#87515a; }
+.pill { border-radius:4px; }
+.upgrade-empty { padding:18px 10px; }
+.event-banner { border-radius:7px; background:#302b2b; }
+.event-spark { border-radius:5px; }
+.content-grid { gap:12px; }
+.pad-panel { padding:15px; }
+.stack { gap:10px; }
+.panel-heading { margin-bottom:10px; }
+.metric-card,.achievement-card,.record-row,.reset-info,.perk-card,.status-box { border-radius:7px; background:#1b2a3e; }
+.daily-hero,.prestige-hero { border-radius:8px; box-shadow:none; }
+.daily-hero:after { display:none; }
+.toast-region { top:10px; right:10px; }
+.toast { border:1px solid #50617a; border-radius:6px; background:#f3f0e7; color:#17202b; box-shadow:0 4px 14px #08111e55; }
+.toast-icon { border-radius:4px; background:#e9ad6a; color:#17202b; }
+.toast small { color:#526075; }
 .modal-backdrop { backdrop-filter:none; }
-.modal { border:3px solid #0a1429; border-radius:6px; background:#182746; box-shadow:0 7px 0 #070f22; }
-.modal-close { border-radius:4px; }
-.app-footer { color:#a9bad2; }
-@keyframes pixel-pop { 0%{transform:scale(.94)} 60%{transform:scale(1.04)} 100%{transform:scale(1)} }
-.calc-button.pulse { animation:pixel-pop .16s steps(3,end); }
-.float-gain { font-weight:1000; text-shadow:2px 2px 0 #14213f,-1px -1px 0 #14213f; }
-@media(max-width:780px) {
-  .game-shell { padding-inline:14px; }
-  .main-nav { margin-inline:-2px; }
+.modal { border:1px solid #45566e; border-radius:8px; background:#19263a; box-shadow:0 12px 40px #0008; }
+.modal-close { border-radius:5px; }
+.float-gain { text-shadow:1px 1px 0 #111b2b; }
+@media (min-width:781px) and (min-height:700px) {
+  .game-layout { min-height:0; }
+  .click-stage { min-height:230px; }
 }
-@media(max-width:540px) {
-  .game-shell { padding-inline:10px; }
-  .boot-logo { margin-bottom:24px; }
-  .calc-button { width:min(285px,84%); }
-  .click-stage { min-height:310px; }
-  .nav-item { padding:8px 9px; }
+@media (max-width:1050px) {
+  .game-shell { padding-inline:15px; }
+  .game-layout { grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:9px; }
+  .game-intro { display:block; }
+  .live-stats { margin-top:7px; }
 }
-@media(prefers-reduced-motion:reduce) {
+@media (max-width:780px) {
+  .game-shell { height:100svh; padding:0 12px 8px; }
+  .topbar { min-height:58px; flex-basis:58px; }
+  .main-nav { padding:7px 0 9px; }
+  .nav-item { padding:7px 9px; }
+  .game-layout { display:flex; flex-direction:column; height:auto; min-height:0; }
+  .game-main { flex:0 0 auto; }
+  .click-stage { min-height:260px; flex:0 0 260px; }
+  .upgrade-panel { min-height:260px; max-height:38svh; }
+  .upgrade-list { min-height:120px; }
+  .screen-host { overflow:auto; }
+  .content-grid { grid-template-columns:minmax(0,1fr); }
+  .page-heading { align-items:flex-start; flex-direction:column; gap:7px; }
+}
+@media (max-width:540px) {
+  .game-shell { padding-inline:9px; }
+  .topbar { min-height:54px; flex-basis:54px; }
+  .brand img { width:30px;height:30px; }
+  .brand-copy strong { font-size:14px; }
+  .brand-copy small { font-size:7px; }
+  .top-summary { gap:8px; }
+  .currency-glyph { width:27px;height:27px; }
+  .top-total small { font-size:7px; }
+  .top-total strong { font-size:12px; max-width:100px; }
+  .save-chip { display:none; }
+  .main-nav { margin-inline:-1px; }
+  .nav-item { gap:5px; padding:6px 7px; font-size:10px; }
+  .nav-item > span:first-child { font-size:12px; }
+  .game-intro h1 { font-size:29px; }
+  .game-intro p { font-size:11px; }
+  .live-stat { padding:6px; }
+  .live-stat small { font-size:7px; }
+  .click-stage { min-height:238px; flex-basis:238px; }
+  .calc-button { width:min(235px,76%); padding:10px; }
+  .calc-screen { min-height:54px; }
+  .calc-key { min-height:25px; }
+  .upgrade-panel { max-height:37svh; }
+  .upgrade-head { flex-direction:row; align-items:center; }
+  .upgrade-head > div:last-child { width:auto; }
+  .upgrade-card { grid-template-columns:29px minmax(0,1fr) auto; gap:6px; padding:6px; }
+  .upgrade-icon { width:28px;height:28px; }
+  .upgrade-card .button { min-width:62px; padding:6px; }
+  .app-footer { display:none; }
+  .metric-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .achievement-grid,.break-grid,.perk-grid { grid-template-columns:minmax(0,1fr); }
+  .perk-card { min-height:125px; }
+  .records-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media (max-height:700px) and (min-width:781px) {
+  .topbar { min-height:54px; flex-basis:54px; }
+  .main-nav { padding:6px 0 8px; }
+  .game-main { gap:6px; }
+  .game-intro h1 { font-size:27px; }
+  .game-intro p { margin-top:3px; font-size:11px; }
+  .live-stat { padding:5px 7px; }
+  .click-stage { min-height:170px; }
+  .calc-button { width:min(225px,68%); padding:9px; }
+  .calc-screen { min-height:48px; }
+  .calc-keys { margin-top:6px; }
+  .calc-key { min-height:23px; }
+  .click-instruction { bottom:5px; }
+  .upgrade-head { padding:8px 10px 5px; }
+  .upgrade-card { min-height:53px; }
+  .upgrade-copy p { display:none; }
+  .app-footer { padding-top:4px; }
+}
+@media (prefers-reduced-motion:reduce) {
   .calc-button,.button,.nav-item { transition:none!important; }
   .calc-button.pulse { animation:none!important; }
+  .page-wrap { animation:none!important; }
 }
