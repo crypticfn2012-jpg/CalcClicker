@@ -24,8 +24,13 @@ const timeLabel = (seconds) => {
 };
 const percent = (value, total) => total > 0 ? Math.max(0, Math.min(100, value / total * 100)) : 0;
 
-const loader = $('#loader');
-const progressBar = $('#loading-progress');
+const loader = $('#boot');
+const progressBar = $('#bootBar');
+const loadingCaption = $('#bootCaption');
+const MIN_SPLASH_MS = 3000;
+const bootStartedAt = performance.now();
+let bootTimer = null;
+let bootProgress = 4;
 const gameShell = $('#game-shell');
 const screenHost = $('#screen-host');
 const modalRoot = $('#modal-root');
@@ -839,27 +844,32 @@ function closeOnEscape(event) {
 }
 
 async function startGame() {
-  setLoaderProgress(14);
+  // Match Stack Shift's blue PixelForge progress bar, but keep the splash visible
+  // for at least three seconds so it feels intentional instead of flashing past.
+  setLoaderProgress(4);
+  bootTimer = setInterval(() => {
+    bootProgress = Math.min(88, bootProgress + Math.random() * 7 + 2);
+    setLoaderProgress(bootProgress);
+  }, 180);
+
   const init = platform.initialize();
-  const progressTimer = setInterval(() => {
-    const current = Number(progressBar.parentElement.getAttribute('aria-valuenow')) || 14;
-    if (current < 64) setLoaderProgress(current + 4);
-  }, 160);
   const status = await init;
-  clearInterval(progressTimer);
-  setLoaderProgress(72);
   const loaded = loadGameState(platform, Date.now());
   state = loaded.state;
   updateSaveStatus(loaded.saveStatus, loaded.usedFallback ? 'warning' : '');
   updateMotionPreference();
   renderScreen();
-  setLoaderProgress(91);
-  // The studio splash is inline SVG, so it has no external image decode to wait for.
-  await new Promise((resolve) => setTimeout(resolve, 180));
+
+  clearInterval(bootTimer);
+  bootTimer = null;
+  const remaining = MIN_SPLASH_MS - (performance.now() - bootStartedAt);
+  if (remaining > 0) await new Promise((resolve) => setTimeout(resolve, remaining));
+  loadingCaption.textContent = 'Ready to calculate';
   setLoaderProgress(100);
   gameShell.hidden = false;
-  loader.classList.add('leaving');
-  setTimeout(() => { loader.hidden = true; }, 450);
+  // Same fade timing as Stack Shift's #boot.done transition.
+  requestAnimationFrame(() => loader.classList.add('done'));
+  setTimeout(() => { loader.hidden = true; }, 430);
   platform.loadingStop();
   platform.setGameplay(true);
   scheduleSave(true);
@@ -888,11 +898,15 @@ document.addEventListener('visibilitychange', () => {
 window.addEventListener('pagehide', () => { if (state) flushSave(); });
 window.addEventListener('beforeunload', () => { if (state) flushSave(); });
 
-startGame().catch((error) => {
+startGame().catch(async (error) => {
+  if (bootTimer) clearInterval(bootTimer);
+  const remaining = MIN_SPLASH_MS - (performance.now() - bootStartedAt);
+  if (remaining > 0) await new Promise((resolve) => setTimeout(resolve, remaining));
+  loadingCaption.textContent = 'Ready to calculate';
   setLoaderProgress(100);
   gameShell.hidden = false;
-  loader.classList.add('leaving');
-  setTimeout(() => { loader.hidden = true; }, 450);
+  requestAnimationFrame(() => loader.classList.add('done'));
+  setTimeout(() => { loader.hidden = true; }, 430);
   const fallback = createFreshState(Date.now());
   state ??= fallback;
   renderScreen();
