@@ -908,7 +908,7 @@ async function startGame() {
   bootTimer = null;
   const remaining = MIN_SPLASH_MS - (performance.now() - bootStartedAt);
   if (remaining > 0) await new Promise((resolve) => setTimeout(resolve, remaining));
-  loadingCaption.textContent = 'Ready to calculate';
+  loadingCaption.textContent = 'Ready to stack';
   setLoaderProgress(100);
   gameShell.hidden = false;
   // Same fade timing as Stack Shift's #boot.done transition.
