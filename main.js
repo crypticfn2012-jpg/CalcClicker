@@ -83,19 +83,28 @@ function playSound(type) {
     const Audio = window.AudioContext || window.webkitAudioContext;
     if (!Audio) return;
     audioContext ??= new Audio();
-    if (audioContext.state === 'suspended') audioContext.resume();
+    if (audioContext.state === 'suspended') audioContext.resume().catch(() => {});
     const now = audioContext.currentTime;
-    const tones = type === 'achievement' ? [660, 880] : type === 'purchase' ? [500, 720] : type === 'event' ? [620, 940] : [390];
-    tones.forEach((frequency, index) => {
-      const osc = audioContext.createOscillator();
-      const gain = audioContext.createGain();
-      osc.type = type === 'click' ? 'triangle' : 'sine';
-      osc.frequency.value = frequency;
-      gain.gain.setValueAtTime(Math.min(.11, state.settings.volume * (type === 'click' ? .08 : .12)), now + index * .065);
-      gain.gain.exponentialRampToValueAtTime(.001, now + index * .065 + (type === 'click' ? .055 : .16));
-      osc.connect(gain).connect(audioContext.destination);
-      osc.start(now + index * .065);
-      osc.stop(now + index * .065 + (type === 'click' ? .06 : .17));
+    const presets = {
+      click: { notes: [430], wave: 'square', peak: .035, length: .045, gap: .025 },
+      purchase: { notes: [520, 780], wave: 'triangle', peak: .065, length: .105, gap: .055 },
+      achievement: { notes: [587, 740, 988], wave: 'triangle', peak: .075, length: .14, gap: .065 },
+      event: { notes: [660, 990], wave: 'sine', peak: .06, length: .17, gap: .075 },
+      quiet: { notes: [], wave: 'sine', peak: 0, length: .05, gap: 0 },
+    };
+    const preset = presets[type] || presets.click;
+    preset.notes.forEach((frequency, index) => {
+      const start = now + index * preset.gap;
+      const oscillator = audioContext.createOscillator();
+      const envelope = audioContext.createGain();
+      oscillator.type = preset.wave;
+      oscillator.frequency.setValueAtTime(frequency, start);
+      envelope.gain.setValueAtTime(.0001, start);
+      envelope.gain.exponentialRampToValueAtTime(Math.max(.0002, preset.peak * state.settings.volume), start + .008);
+      envelope.gain.exponentialRampToValueAtTime(.0001, start + preset.length);
+      oscillator.connect(envelope).connect(audioContext.destination);
+      oscillator.start(start);
+      oscillator.stop(start + preset.length + .01);
     });
   } catch {}
 }
@@ -849,7 +858,7 @@ async function startGame() {
   updateMotionPreference();
   renderScreen();
   setLoaderProgress(91);
-  try { await $('.studio-mark').decode(); } catch {}
+  // The studio splash is inline SVG, so it has no external image decode to wait for.
   await new Promise((resolve) => setTimeout(resolve, 180));
   setLoaderProgress(100);
   gameShell.hidden = false;
