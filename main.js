@@ -236,13 +236,57 @@ function visibleUpgrades() {
     .sort((a, b) => a.unlockAt - b.unlockAt);
   return unlocked.concat(locked.slice(0, 3));
 }
+function spritePosition(index, columns, rows) {
+  const col = index % columns;
+  const row = Math.floor(index / columns);
+  return ((columns > 1 ? col / (columns - 1) * 100 : 0).toFixed(2)) + '% ' +
+    ((rows > 1 ? row / (rows - 1) * 100 : 0).toFixed(2)) + '%';
+}
+function upgradeSpriteIndex(id) {
+  const sprites = {
+    pocket: 0, 'study-buddy': 4, classroom: 1, scientific: 7,
+    'answer-machine': 3, 'computer-lab': 2, 'formula-server': 8,
+    'quantum-board': 9, 'proof-engine': 11, 'number-reactor': 10,
+    'infinity-array': 15, 'theorem-engine': 14, keycaps: 0,
+    'formula-notes': 5, 'streak-engine': 6, 'lucky-theory': 12,
+    'focus-mode': 13, 'sleep-math': 12, 'event-radar': 10,
+    whiteboard: 1, 'mental-math': 15, 'offline-planner': 8,
+    'pocket-money': 0, 'sharper-minds': 11, 'night-shift': 13,
+    echoes: 14, keepsake: 0, 'long-memory': 6
+  };
+  return sprites[id] ?? 0;
+}
+function achievementSpriteIndex(id) {
+  if (id === 'first-click') return 0;
+  if (id === 'first-upgrade') return 1;
+  if (id === 'first-auto' || id.startsWith('rate-')) return 3;
+  if (id.startsWith('clicks-')) return 4;
+  if (id.startsWith('streak-')) return 5;
+  if (id.startsWith('bank-')) return 10;
+  if (id.startsWith('time-')) return 2;
+  if (id.startsWith('daily-')) return 6;
+  if (id.startsWith('event-')) return 7;
+  if (id.startsWith('prestige-')) return 8;
+  if (id.startsWith('rebirth-')) return 9;
+  if (id.startsWith('upgrades-') || id.startsWith('variety-')) return 11;
+  return 3;
+}
+function renderUpgradeSprite(id) {
+  return '<span class="upgrade-icon sprite-icon" aria-hidden="true" style="background-position:' +
+    spritePosition(upgradeSpriteIndex(id), 4, 4) + '"></span>';
+}
+function renderAchievementSprite(id) {
+  return '<span class="achievement-icon sprite-icon" aria-hidden="true" style="background-position:' +
+    spritePosition(achievementSpriteIndex(id), 4, 3) + '"></span>';
+}
+
 function renderUpgradeCard(item) {
   const quote = getPurchaseQuote(state, item.id, buyMode);
   const unlocked = getUpgradeUnlock(item, state);
   const owned = getOwned(state, item.id);
   const locked = !unlocked.unlocked && owned === 0;
   if (locked) {
-    return '<article class="upgrade-card" data-upgrade-id="' + esc(item.id) + '"><span class="upgrade-icon">' + esc(item.icon) + '</span><span class="upgrade-copy"><h3>' + esc(item.name) + '</h3><p>' + esc(unlocked.requirement) + '</p></span><span class="upgrade-count">LOCKED</span></article>';
+    return '<article class="upgrade-card" data-upgrade-id="' + esc(item.id) + '">' + renderUpgradeSprite(item.id) + '<span class="upgrade-copy"><h3>' + esc(item.name) + '</h3><p>' + esc(unlocked.requirement) + '</p></span><span class="upgrade-count">LOCKED</span></article>';
   }
   const benefit = item.rate != null
     ? '+' + number(item.rate) + ' / sec each'
@@ -259,7 +303,7 @@ function renderUpgradeCard(item) {
   const action = soldOut ? 'MAXED' : 'Buy ' + quote.quantity;
   const cost = soldOut ? 'OWNED' : number(quote.cost || getNextCost(state, item));
   return '<article class="upgrade-card ' + (affordable ? 'affordable' : '') + '" data-upgrade-id="' + esc(item.id) + '">'
-    + '<span class="upgrade-icon">' + esc(item.icon) + '</span>'
+    + renderUpgradeSprite(item.id)
     + '<span class="upgrade-copy"><h3>' + esc(item.name) + '<span class="upgrade-count">×' + number(owned) + '</span></h3>'
     + '<p>' + esc(item.description) + '</p><span class="upgrade-meta"><strong>' + esc(benefit) + '</strong></span></span>'
     + '<button class="button compact ' + (affordable ? 'primary' : '') + '" data-action="buy" data-id="' + esc(item.id) + '" data-mode="' + esc(buyMode) + '" ' + (affordable ? '' : 'disabled') + '>'
@@ -359,7 +403,7 @@ function renderAchievements() {
     const progress = getAchievementProgress(state, achievement);
     const ratio = progress.ratio * 100;
     return '<article class="achievement-card ' + (earned ? 'unlocked' : '') + '" data-achievement-id="' + esc(achievement.id) + '" data-metric="' + esc(achievement.metric) + '" data-goal="' + achievement.goal + '">'
-      + '<div class="achievement-top"><span class="achievement-icon">' + (earned ? '✓' : '◇') + '</span><div class="achievement-copy"><h3>' + esc(achievement.name) + '</h3><p>' + esc(achievement.description) + '</p></div>'
+      + '<div class="achievement-top">' + renderAchievementSprite(achievement.id) + '<div class="achievement-copy"><h3>' + esc(achievement.name) + '</h3><p>' + esc(achievement.description) + '</p></div>'
       + '<span class="achievement-reward">+' + number(achievement.reward) + '</span></div>'
       + '<div class="achievement-progress"><div class="progress-head"><span>' + (earned ? 'Unlocked' : 'Progress') + '</span><strong class="achievement-value">' + (earned ? 'Complete' : number(progress.value) + ' / ' + number(progress.goal)) + '</strong></div>'
       + '<div class="progress-track"><div class="progress-fill mint" style="width:' + ratio + '%"></div></div></div></article>';
