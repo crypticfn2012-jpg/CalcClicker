@@ -369,3 +369,33 @@ html[data-reduced-motion="true"] *::after {
   animation-iteration-count: 1 !important;
   transition-duration: .01ms !important;
 }
+
+
+/* PixelForge's uploaded icon sheets are used as actual game UI sprites. */
+.upgrade-icon.sprite-icon {
+  display: block;
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+  background-image: url("./assets/UpgradesSheet.png");
+  background-repeat: no-repeat;
+  background-size: 400% 400%;
+  image-rendering: pixelated;
+}
+.achievement-icon.sprite-icon {
+  display: block;
+  width: 42px;
+  height: 28px;
+  flex: 0 0 42px;
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+  background-image: url("./assets/Achievements%20and%20milestones.png");
+  background-repeat: no-repeat;
+  background-size: 400% 300%;
+  image-rendering: pixelated;
+}
+.achievement-card.unlocked .achievement-icon.sprite-icon {
+  border-color: transparent;
+  background-color: transparent;
+}
