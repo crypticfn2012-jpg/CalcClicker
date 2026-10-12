@@ -1,0 +1,10 @@
+{
+  "name": "calc-clicker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node tools/server.mjs",
+    "test": "node --test tests/engine.test.js"
+  }
+}

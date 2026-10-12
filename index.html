@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0c111b">
+  <meta name="description" content="Click, calculate, upgrade your desk and grow a number-crunching empire in Calc Clicker by PixelForge Studios.">
+  <title>Calc Clicker — PixelForge Studios</title>
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div id="loader" class="loader" aria-label="Loading Calc Clicker">
+    <div class="loader-inner">
+      <img class="studio-mark" src="./assets/pixelforge-studios.png" alt="PixelForge Studios" width="130" height="130">
+      <div class="loading-caption">A little calculation is loading</div>
+      <div class="loading-track" role="progressbar" aria-label="Game loading" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="loading-progress"></span></div>
+      <span class="loader-note">CALC CLICKER · MADE WITH CARE</span>
+    </div>
+  </div>
+
+  <div id="game-shell" class="game-shell" hidden>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Calc Clicker home" data-screen="lab">
+        <img src="./assets/calc-clicker.svg" alt="" width="42" height="42">
+        <span class="brand-copy"><strong>Calc Clicker</strong><small>PIXELFORGE STUDIOS</small></span>
+      </a>
+      <div class="top-summary">
+        <div class="top-total"><span class="currency-glyph">=</span><span><small>CALCULATOR POINTS</small><strong id="top-points">0</strong></span></div>
+        <span class="save-chip" id="save-status" aria-live="polite"><i></i><span>Starting…</span></span>
+      </div>
+    </header>
+
+    <nav class="main-nav" aria-label="Game sections">
+      <button class="nav-item active" data-screen="lab" aria-current="page"><span aria-hidden="true">▦</span><span>Study Hall</span></button>
+      <button class="nav-item" data-screen="challenges"><span aria-hidden="true">◷</span><span>Daily</span><b id="daily-badge" hidden>!</b></button>
+      <button class="nav-item" data-screen="achievements"><span aria-hidden="true">✦</span><span>Milestones</span></button>
+      <button class="nav-item" data-screen="prestige"><span aria-hidden="true">↻</span><span>Prestige</span></button>
+      <button class="nav-item" data-screen="records"><span aria-hidden="true">▤</span><span>Records</span></button>
+      <button class="nav-item" data-screen="break"><span aria-hidden="true">☕</span><span>Study Break</span></button>
+      <button class="nav-item" data-screen="settings"><span aria-hidden="true">⚙</span><span>Settings</span></button>
+    </nav>
+
+    <main id="screen-host" class="screen-host" tabindex="-1"></main>
+
+    <footer class="app-footer">
+      <span>CALC CLICKER <span class="footer-dot">·</span> A PixelForge Studios game</span>
+      <span id="footer-save">Progress saves automatically</span>
+    </footer>
+  </div>
+
+  <div id="toast-region" class="toast-region" aria-live="polite" aria-atomic="false"></div>
+  <div id="modal-root"></div>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
