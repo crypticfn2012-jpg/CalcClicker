@@ -1,0 +1,124 @@
+/* Calc Clicker — hand-built pixel UI pass. Art is intentionally placeholder-ready. */
+:root {
+  --bg: #14213f;
+  --surface: #fbf0d4;
+  --surface-2: #f4e3b8;
+  --surface-3: #e8d3a5;
+  --line: #14213f;
+  --line-soft: rgba(20,33,63,.18);
+  --ink: #14213f;
+  --muted: #53617b;
+  --blue: #0789ff;
+  --blue-deep: #075eb0;
+  --orange: #f5862a;
+  --mint: #2f8a55;
+  --danger: #c8382b;
+  --shadow: 0 5px 0 rgba(8,17,37,.55);
+  --radius: 7px;
+  font-family: "Trebuchet MS", "Arial Rounded MT Bold", system-ui, sans-serif;
+}
+body {
+  color: #fbf0d4;
+  background: #101a33;
+  background-image: linear-gradient(180deg,#26395f 0,#1a2748 260px,#101a33 620px);
+  image-rendering: pixelated;
+}
+.loader { background: #000; }
+.loader-inner { width: min(390px,88vw); gap: 0; }
+.boot-logo { display:block; width:min(330px,78vw); margin:0 auto 28px; }
+.loading-track { width:100%; height:5px; margin-top:0; border-radius:0; background:#1c2941; }
+.loading-track span { border-radius:0; background:#0789ff; box-shadow:none; transition:width .18s linear; }
+.loader-note { margin-top:12px; color:#91a2bf; font:800 10px/1.3 system-ui,sans-serif; letter-spacing:.17em; }
+.game-shell { max-width:1320px; padding-inline:24px; }
+.topbar { border-bottom:2px solid rgba(251,240,212,.14); }
+.brand-copy small { color:#55b4ff; }
+.currency-glyph { border:2px solid #0789ff; border-radius:5px; color:#0789ff; background:#0d1b34; }
+.save-chip i { box-shadow:none; }
+.main-nav { gap:7px; padding-block:13px 18px; }
+.nav-item { border:2px solid transparent; border-radius:5px; font-weight:800; }
+.nav-item.active { border-color:#0789ff; color:#fbf0d4; background:#1b2d50; box-shadow:3px 3px 0 #0a1429; }
+.nav-item > span:first-child { color:#ff9a42; }
+.panel {
+  border:2px solid rgba(251,240,212,.18);
+  border-radius:7px;
+  background:#182746;
+  box-shadow:0 5px 0 rgba(5,11,25,.25);
+}
+.page-heading h1,.game-intro h1 { letter-spacing:-.035em; }
+.page-heading .eyebrow,.eyebrow { color:#ffad59; }
+.game-intro h1 span,.page-heading h1 em { color:#ffad59; }
+.click-stage {
+  border:3px solid #0a1429;
+  border-radius:7px;
+  background-color:#1a2a4b;
+  background-image:linear-gradient(rgba(7,18,40,.45) 1px,transparent 1px),linear-gradient(90deg,rgba(7,18,40,.45) 1px,transparent 1px);
+  background-size:16px 16px;
+  box-shadow:inset 0 0 0 2px rgba(251,240,212,.06);
+}
+.click-stage:before { opacity:.25; background-image:radial-gradient(#8bb3d9 1px,transparent 1px); background-size:16px 16px; }
+.stage-glow { display:none; }
+.calc-button {
+  width:min(300px,78%);
+  padding:14px;
+  border:4px solid #0a1429;
+  border-radius:7px;
+  background:#f4e3b8;
+  box-shadow:0 7px 0 #070f22, inset 0 0 0 2px #fff6df;
+  transition:transform .09s steps(3,end),box-shadow .09s steps(3,end),filter .12s;
+}
+.calc-button:hover { border-color:#0a1429; box-shadow:0 9px 0 #070f22; filter:brightness(1.04); }
+.calc-button:active,.calc-button.pulse { transform:translateY(5px); box-shadow:0 2px 0 #070f22; }
+.calc-screen { border:3px solid #0a1429; border-radius:3px; background:#0b1a1d; box-shadow:inset 0 3px 0 #03090d; }
+.calc-screen strong { color:#9ff0b6; text-shadow:none; }
+.calc-keys { gap:5px; }
+.calc-key { border:2px solid #14213f; border-radius:3px; color:#14213f; background:#fff2d1; box-shadow:0 2px 0 #cbb98f; }
+.calc-key.operator { color:#075eb0; background:#d4eaff; }
+.calc-key.equals { color:#14213f; border-color:#14213f; background:#f5862a; }
+.button {
+  border:2px solid #0a1429;
+  border-radius:5px;
+  background:#26395f;
+  box-shadow:0 3px 0 #070f22;
+  font-weight:800;
+  transition:transform .1s steps(3,end),box-shadow .1s,filter .12s,background .12s;
+}
+.button:hover:not(:disabled) { border-color:#0a1429; background:#314a76; box-shadow:0 5px 0 #070f22; transform:translateY(-2px); }
+.button:active:not(:disabled) { transform:translateY(2px); box-shadow:0 1px 0 #070f22; }
+.button.primary { color:#14213f; border-color:#0a1429; background:#f5862a; box-shadow:0 3px 0 #070f22; }
+.button.primary:hover:not(:disabled) { background:#ffad59; }
+.button.soft { background:#1c2e50; }
+.button.warn { border-color:#7d241f; color:#ffd3ca; background:#572a35; }
+.buy-mode,.filter-chip,.ach-filter {
+  border-radius:4px;
+}
+.buy-mode.active,.filter-chip.active { color:#14213f; background:#ffad59; border-color:#0a1429; }
+.upgrade-card { border-radius:5px; border-color:rgba(251,240,212,.18); background:#1c2d4d; }
+.upgrade-card.affordable { border-color:#f5862a; background:#213555; }
+.upgrade-icon,.perk-icon,.break-icon { border-radius:5px; box-shadow:2px 2px 0 #0a1429; }
+.progress-track,.streak-track,.progress-fill { border-radius:2px; }
+.toast-region { top:14px; right:14px; }
+.toast { border:2px solid #0a1429; border-radius:5px; background:#fbf0d4; color:#14213f; box-shadow:0 4px 0 rgba(0,0,0,.35); }
+.toast small { color:#53617b; }
+.toast-icon { border-radius:4px; background:#f5862a; color:#14213f; }
+.modal-backdrop { backdrop-filter:none; }
+.modal { border:3px solid #0a1429; border-radius:6px; background:#182746; box-shadow:0 7px 0 #070f22; }
+.modal-close { border-radius:4px; }
+.app-footer { color:#a9bad2; }
+@keyframes pixel-pop { 0%{transform:scale(.94)} 60%{transform:scale(1.04)} 100%{transform:scale(1)} }
+.calc-button.pulse { animation:pixel-pop .16s steps(3,end); }
+.float-gain { font-weight:1000; text-shadow:2px 2px 0 #14213f,-1px -1px 0 #14213f; }
+@media(max-width:780px) {
+  .game-shell { padding-inline:14px; }
+  .main-nav { margin-inline:-2px; }
+}
+@media(max-width:540px) {
+  .game-shell { padding-inline:10px; }
+  .boot-logo { margin-bottom:24px; }
+  .calc-button { width:min(285px,84%); }
+  .click-stage { min-height:310px; }
+  .nav-item { padding:8px 9px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .calc-button,.button,.nav-item { transition:none!important; }
+  .calc-button.pulse { animation:none!important; }
+}
