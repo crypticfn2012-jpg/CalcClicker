@@ -65,8 +65,9 @@ function template(markup) {
   return holder.content.firstElementChild;
 }
 function setLoaderProgress(value) {
+  if (!progressBar) return;
   progressBar.style.width = Math.max(0, Math.min(100, value)) + '%';
-  progressBar.parentElement.setAttribute('aria-valuenow', String(value));
+  progressBar.parentElement?.setAttribute('aria-valuenow', String(value));
 }
 function updateMotionPreference() {
   document.documentElement.dataset.reducedMotion = state?.settings?.reducedMotion ? 'true' : 'false';
@@ -908,12 +909,12 @@ async function startGame() {
   bootTimer = null;
   const remaining = MIN_SPLASH_MS - (performance.now() - bootStartedAt);
   if (remaining > 0) await new Promise((resolve) => setTimeout(resolve, remaining));
-  loadingCaption.textContent = 'Ready to stack';
+  if (loadingCaption) loadingCaption.textContent = 'Ready to stack';
   setLoaderProgress(100);
-  gameShell.hidden = false;
+  if (gameShell) gameShell.hidden = false;
   // Same fade timing as Stack Shift's #boot.done transition.
-  requestAnimationFrame(() => loader.classList.add('done'));
-  setTimeout(() => { loader.hidden = true; }, 430);
+  requestAnimationFrame(() => loader?.classList.add('done'));
+  setTimeout(() => { if (loader) loader.hidden = true; }, 430);
   platform.loadingStop();
   platform.setGameplay(true);
   scheduleSave(true);
@@ -946,11 +947,11 @@ startGame().catch(async (error) => {
   if (bootTimer) clearInterval(bootTimer);
   const remaining = MIN_SPLASH_MS - (performance.now() - bootStartedAt);
   if (remaining > 0) await new Promise((resolve) => setTimeout(resolve, remaining));
-  loadingCaption.textContent = 'Ready to calculate';
+  if (loadingCaption) loadingCaption.textContent = 'Ready to calculate';
   setLoaderProgress(100);
-  gameShell.hidden = false;
-  requestAnimationFrame(() => loader.classList.add('done'));
-  setTimeout(() => { loader.hidden = true; }, 430);
+  if (gameShell) gameShell.hidden = false;
+  requestAnimationFrame(() => loader?.classList.add('done'));
+  setTimeout(() => { if (loader) loader.hidden = true; }, 430);
   const fallback = createFreshState(Date.now());
   state ??= fallback;
   renderScreen();
